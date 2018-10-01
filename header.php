@@ -5,6 +5,6 @@
         <figcaption>Snowmen observing an accident.</figcaption>
     </figure>
     <h1>Hikers</h1>
-    <h2>Tag line</h2>
+    <h2>Take a Hike LOL!</h2>
 </header>
 <!-- %%%%%%%%%%%%%%%%%%%%% Ends Page header   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Bob, DB Example</title>
+        <title>Hikers of Vermont</title>
         <meta charset="utf-8">
-        <meta name="author" content="Robert Erickson">
-        <meta name="description" content="Bob, Thank you for the example">
+        <meta name="author" content="Billy Risigo">
+        <meta name="description" content="Hikers in vermont">
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -25,6 +25,10 @@
         include 'lib/constants.php';
 
         include LIB_PATH . '/Connect-With-Database.php';
+        
+        require_once 'lib/security.php';
+        include_once 'lib/validation-functions.php';     
+        include_once 'lib/mail-message.php';   
 
         print '<!-- libraries complete-->';
         ?>	
