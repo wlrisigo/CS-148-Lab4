@@ -11,28 +11,10 @@
         print '><a href="index.php">Home</a></li>';
        
         print '<li ';
-        if ($PATH_PARTS['filename'] == 'sampleQuery') {
+        if ($PATH_PARTS['filename'] == 'form') {
             print ' class="activePage" ';
         }
-        print '><a href="sampleQuery.php">Sample SELECT</a></li>';
-       
-        print '<li ';
-        if ($PATH_PARTS['filename'] == 'sampleQuery2') {
-            print ' class="activePage" ';
-        }
-        print '><a href="sampleQuery2.php">Sample INSERT</a></li>';
-        
-        print '<li ';
-        if ($PATH_PARTS['filename'] == 'sampleQuery3') {
-            print ' class="activePage" ';
-        }
-        print '><a href="sampleQuery3.php">Sample SELECT (with ORDER clause)</a></li>';
-        
-        print '<li ';
-        if ($PATH_PARTS['filename'] == 'sampleQuery4') {
-            print ' class="activePage" ';
-        }
-        print '><a href="sampleQuery4.php">Sample test (fails)</a></li>';
+        print '><a href="form.php">Form</a></li>';
         
         print '<li ';
         if ($PATH_PARTS['filename'] == 'tables') {

@@ -7,7 +7,7 @@ include 'top.php';
 //##############################################################################
 $records = '';
 
-$query = 'SELECT fldFirstName, fldLastName FROM tblPeople';
+$query = 'SELECT fldFirstName, fldLastName FROM tblHikers';
 
 // NOTE: The full method call would be:
 //           $thisDatabaseReader->querySecurityOk($query, 0, 0, 0, 0, 0)
