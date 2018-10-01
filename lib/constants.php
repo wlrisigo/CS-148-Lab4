@@ -1,5 +1,5 @@
 <?php
-define('DATABASE_NAME', 'WRISIGO_myproject');
+define('DATABASE_NAME', 'WRISIGO_myProject');
 define('DATABASE_READER', 'wrisigo_reader');
 define('DATABASE_READER_PWD', 'r');
 define('DATABASE_WRITER_PWD', 'w');
