@@ -1,4 +1,6 @@
-.DS_Store
-nbproject/
+.htaccess
+.user.ini
+Database.php
 pass.php
-video
+ADMIN
+nbproject
