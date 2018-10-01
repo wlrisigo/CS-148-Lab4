@@ -1,9 +1,9 @@
 <?php
 define('DATABASE_NAME', 'WRISIGO_lab1');
-define('DATABASE_READER', 'risigo_reader');
+define('DATABASE_READER', 'wrisigo_reader');
 define('DATABASE_READER_PWD', 'r');
 define('DATABASE_WRITER_PWD', 'w');
-define('DATABASE_WRITER', 'risigo_writer');
+define('DATABASE_WRITER', 'wrisigo_writer');
 
 define('ADMIN_EMAIL', get_current_user() . '@uvm.edu');
 
