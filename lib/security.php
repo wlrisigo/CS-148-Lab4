@@ -5,7 +5,7 @@ print PHP_EOL . '<!--  BEGIN include security -->' . PHP_EOL;
 function securityCheck($myFormURL = "") {
     $debugThis = false;  // you have to specifically want to test this
     $token = 'replace with token from lecture';
-    if($token == 'replace with token from lecture'){
+    if($token != 'replace with token from lecture'){
         print "<p>Invalid token. Please get token from Instructor.";
         die();
     }
@@ -28,5 +28,5 @@ function securityCheck($myFormURL = "") {
 
     return $status;
 }
-print PHP_EOL . '<!--  END include security ' . $token . ' -->' . PHP_EOL;
+print PHP_EOL . '<!--  END include security  -->' . PHP_EOL;
 ?>

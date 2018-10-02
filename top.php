@@ -23,13 +23,10 @@
         print '<!-- begin including libraries -->';
         
         include 'lib/constants.php';
-
         include LIB_PATH . '/Connect-With-Database.php';
-        
         require_once 'lib/security.php';
         include_once 'lib/validation-functions.php';     
         include_once 'lib/mail-message.php';   
-
         print '<!-- libraries complete-->';
         ?>	
 

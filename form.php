@@ -6,6 +6,9 @@ print  PHP_EOL . '<!-- SECTION: 1 Initialize variables -->' . PHP_EOL;
 // These variables are used in both sections 2 and 3, otherwise we would
 // declare them in the section we needed them
 
+$currentHiker = "Mark";
+$hikerERROR = false;
+
 print  PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
 // We print out the post array so that we can see our form is working.
 // Normally i wrap this in a debug statement but for now i want to always
@@ -24,7 +27,15 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 // Initialize variables one for each form element
 // in the order they appear on the form
 
-$firstName = "";       
+$hikeQuery = "SELECT pmkHikersId, fldFirstName, fldLastName FROM tblHikers";
+if ($thisDatabaseReader->querySecurityOk($hikeQuery, 0)) {
+    $hikeQuery = $thisDatabaseReader->sanitizeQuery($hikeQuery);
+    $hikers = $thisDatabaseReader->select($hikeQuery, '');
+}
+
+$hikerId = null; 
+$firstName = "";
+$lastName = "";
 
 $email = "your-email@uvm.edu";     
 
@@ -34,7 +45,9 @@ print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 //
 // Initialize Error Flags one for each form element we validate
 // in the order they appear on the form
+$hikerIdError = false;
 $firstNameERROR = false;
+$lastNameERROR = false;
 $emailERROR = false;       
 
 ////%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -267,6 +280,32 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
           id = "frmRegister"
           method = "post">
 
+      <fieldset>
+        <h2>List of Hikers</h2>
+
+        <label for="lstHikers" 
+            <?php if($hikerERROR)
+            print 'class = "mistake"'; ?>
+        >Hiker
+            <select id="lstHikers"
+                    name="lstHikers"
+                    tabindex = "300">
+                
+            <?php
+             foreach ($hikers as $hiker) {
+
+                print '<option ';
+                if ($currentHiker == $hiker["pmkHikersId"])
+                    print " selected='selected' ";
+                print 'value="' . $hiker["pmkHikersId"] . '">' . $hiker["fldFirstName"] . $hiker["fldLastName"];
+                print '</option>';
+              }
+      ?>
+            </select></label>
+                      
+
+        </fieldset>
+    
                 <fieldset class = "contact">
                     <legend>Contact Information</legend>
                     <p>
@@ -287,7 +326,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                     <p>
                         <label class = "required" for = "txtEmail">Email</label>
                             <input 
-                                   <?php if ($emailERROR) print 'class="mistake"'; ?>
+                                   <?php if ($emailERROR)
+                                       print 'class="mistake"'; ?>
                                    id = "txtEmail"     
                                    maxlength = "45"
                                    name = "txtEmail"
