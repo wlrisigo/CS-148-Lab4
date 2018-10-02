@@ -26,5 +26,11 @@ function verifyPhone($testString) {
     $regex = '/^(?:1(?:[. -])?)?(?:\((?=\d{3}\)))?([2-9]\d{2})(?:(?<=\(\d{3})\))? ?(?:(?<=\d{3})[.-])?([2-9]\d{2})[. -]?(\d{4})(?: (?i:ext)\.? ?(\d{1,5}))?$/';
     return (preg_match($regex, $testString));
 }
+
+function validateDate($date, $format = 'Y-m-d')
+{
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) === $date;
+}
 print PHP_EOL . '<!--  END include validation-functions -->' . PHP_EOL;
 ?>
