@@ -291,6 +291,20 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                 value ="<?php print $date; ?>"
                         >                    
                     </p>
+                      <script>   var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+ if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    } 
+
+today = yyyy+'-'+mm+'-'+dd;
+document.getElementById("txtDate").setAttribute("max", today);
+</script>
                        
                 </fieldset> <!-- ends contact -->
                 
@@ -312,6 +326,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
             <fieldset class="buttons">
                 <legend></legend>
                 <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Add" >
+      
             </fieldset> <!-- ends buttons -->
 </form>     
 <?php
