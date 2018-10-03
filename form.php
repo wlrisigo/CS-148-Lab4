@@ -89,7 +89,7 @@ if (isset($_POST["btnSubmit"])) {
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
     
-    $datePHP = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8"); 
+    $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8"); 
  
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -101,7 +101,7 @@ if (isset($_POST["btnSubmit"])) {
     // order that the elements appear on your form so that the error messages
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
-    if($datePHP == ""){
+    if($date == ""){
         $errorMsg[] = "Please Enter the Date";
         $dateError = true;
     }
@@ -117,7 +117,7 @@ if (isset($_POST["btnSubmit"])) {
     // Process for when the form passes validation (the errorMsg array is empty)
     //    
     if (!$errorMsg) {
-        if ($debug)
+        if (DEBUG)
                 print '<p>Form is valid</p>';
     
         print PHP_EOL . '<!-- SECTION: 2e Save Data -->' . PHP_EOL;
@@ -204,8 +204,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
         print '<h2>Thank you for providing your information.</h2>';
     
-    
-        print $message;
+
     } else {       
      print '<h2>Register Today</h2>';
      print '<p class="form-heading">Your information will greatly help us with our research.</p>';
@@ -288,7 +287,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                 id="txtDate"
                                 name="txtDate"                              
                                 tabindex="100"
-                                type="date"                   
+                                type="date" 
+                                value ="<?php print $date; ?>"
                         >                    
                     </p>
                        
