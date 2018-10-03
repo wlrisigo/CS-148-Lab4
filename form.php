@@ -6,8 +6,7 @@ print  PHP_EOL . '<!-- SECTION: 1 Initialize variables -->' . PHP_EOL;
 // These variables are used in both sections 2 and 3, otherwise we would
 // declare them in the section we needed them
 
-$currentHiker = "Mark";
-$hikerERROR = false;
+
 
 print  PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
 // We print out the post array so that we can see our form is working.
@@ -18,6 +17,8 @@ print  PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
     print '<p>Post Array:</p><pre>';
     print_r($_POST);
     print '</pre>';
+   
+    
 // }
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -26,14 +27,23 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
-$dataInsert = "INSERT INTO tblHikersTrails SET fldDate";
+
+$currentHiker = "Mark";
+
 $hikeQuery = "SELECT pmkHikersId, fldFirstName, fldLastName FROM tblHikers";
+
+$mountainQuery = "SELECT pmkTrailsId, fldTrailName FROM tblTrails";
 if ($thisDatabaseReader->querySecurityOk($hikeQuery, 0)) {
     $hikeQuery = $thisDatabaseReader->sanitizeQuery($hikeQuery);
     $hikers = $thisDatabaseReader->select($hikeQuery, '');
 }
+$date = "";
 
-$date = null; 
+if ($thisDatabaseReader->querySecurityOk($mountainQuery, 0)) {
+                 $mountainQuery = $thisDatabaseReader->sanitizeQuery($mountainQuery);           
+                 $mountains = $thisDatabaseReader->select($mountainQuery, '');        
+}
+
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -41,14 +51,18 @@ print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 //
 // Initialize Error Flags one for each form element we validate
 // in the order they appear on the form
+$hikerERROR = false;
 $dateERROR = false;
+$trailERROR = false;
 
 ////%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 print PHP_EOL . '<!-- SECTION: 1d misc variables -->' . PHP_EOL;
 //
 // create array to hold error messages filled (if any) in 2d displayed in 3c.
-$errorMsg = array();       
+$errorMsg = array();
+$mailed = false;
+$dataEntered = false; 
  
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -61,7 +75,7 @@ if (isset($_POST["btnSubmit"])) {
     print PHP_EOL . '<!-- SECTION: 2a Security -->' . PHP_EOL;
     
     // the url for this form
-    $thisURL = $domain . $phpSelf;
+    $thisURL = DOMAIN . PHP_SELF;
     
     if (!securityCheck($thisURL)) {
         $msg = '<p>Sorry you cannot access this page.</p>';
@@ -74,6 +88,7 @@ if (isset($_POST["btnSubmit"])) {
     print PHP_EOL . '<!-- SECTION: 2b Sanitize (clean) data  -->' . PHP_EOL;
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
+    
     $datePHP = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8"); 
  
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -88,9 +103,12 @@ if (isset($_POST["btnSubmit"])) {
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
     if($datePHP == ""){
         $errorMsg[] = "Please Enter the Date";
+        $dateError = true;
     }
     elseif (!validateDate($date)) {
         $errorMsg[] = "Invalid Date Entry";
+        $dateError = true;
+        
     }
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -101,24 +119,55 @@ if (isset($_POST["btnSubmit"])) {
     if (!$errorMsg) {
         if ($debug)
                 print '<p>Form is valid</p>';
-             
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        //
-        print PHP_EOL . '<!-- SECTION: 2e Save Data -->' . PHP_EOL;
-        //
-        // This block saves the data to a CSV file.   
-        
-        // array used to hold form values that will be saved to a CSV file
-        $dataRecord = array();       
-        
-        // assign values to the dataRecord array
-        $dataRecord[] = $_POST["selectedHiker"];
-        //might be a int 
-        //if its an int will will it must turn value into string
-        $dataRecord[] = $_POST["txtDate"];
-        $dataRecord[] = $_POST["selectedTrail"];
     
-       // results = $thisDatabaseReader->insert($dataInsert, $dataRecord);
+        print PHP_EOL . '<!-- SECTION: 2e Save Data -->' . PHP_EOL;
+        
+        $dataEntered = false;
+        $dataRecord = array();
+      
+        $dataRecord[] = $_POST["selectedHiker"];
+        $dataRecord[] = $_POST["Trails"];
+        $dataRecord[] = $_POST["txtDate"];
+        
+        
+        try{
+            $thisDatabaseWriter->db->beginTransaction();
+            
+            $query = 'INSERT INTO tblHikersTrails SET '
+                . 'fnkHikersId = ?, '
+                . 'fnkTrailsId = ?, '
+                . 'fldDateHiked = ?';
+            if(DEBUG){
+                 $thisDatabaseWriter->TestSecurityQuery($query, 0);
+                print_r($dataRecord);
+            }
+        
+             if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
+                $query = $thisDatabaseWriter->sanitizeQuery($query);
+                
+                $results = $thisDatabaseWriter->insert($query, $dataRecord);
+                $primaryKey = $thisDatabaseWriter->lastInsert();
+
+                if (DEBUG) {
+                    print "<p>pmk= " . $primaryKey;
+                }
+            }
+
+
+             $dataEntered = $thisDatabaseWriter->db->commit();
+                if (DEBUG)
+                print "<p>transaction complete ";
+                 
+            
+   
+            
+        } catch (PDOExecption $e) {
+            $thisDatabase->db->rollback();
+            if (DEBUG)
+                print "Error!: " . $e->getMessage() . "</br>";
+            $errorMsg[] = "There was a problem with accepting your data please contact us directly.";
+        }
+       
     
      
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -127,23 +176,8 @@ if (isset($_POST["btnSubmit"])) {
         //
         // build a message to display on the screen in section 3a and to mail
         // to the person filling out the form (section 2g).
-
-        $message = '<h2>Your  information.</h2>';       
-
-        foreach ($_POST as $htmlName => $value) {
-            
-            $message .= '<p>';
-            // breaks up the form names into words. for example
-            // txtFirstName becomes First Name       
-            $camelCase = preg_split('/(?=[A-Z])/', substr($htmlName, 3));
-
-            foreach ($camelCase as $oneWord) {
-                $message .= $oneWord . ' ';
-            }
-    
-            $message .= ' = ' . htmlentities($value, ENT_QUOTES, "UTF-8") . '</p>';
-
-        }
+        
+        
         
 
     } // end form is valid     
@@ -212,9 +246,10 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
        */
 ?>    
 
+        
 
 
-<form action = "<?php print $phpSelf; ?>"
+<form action = "<?php print PHP_SELF; ?>"
           id = "frmRegister"
           method = "post">
 
@@ -247,25 +282,36 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                 <fieldset class = "contact">
                     <p>
                         <label class="required" for="txtDate">Date</label>  
-                        <input autofocus
+                        <input 
                                <?php //What type of data type is date? ?>
                                 <?php if ($dateERROR) print 'class="mistake"'; ?>
                                 id="txtDate"
-                                maxlength="8"
-                                name="txtDate"
-                                onfocus="this.select()"
-                                placeholder="Enter the Date"
+                                name="txtDate"                              
                                 tabindex="100"
-                                type="date"
-                                value="<?php print $datePHP; ?>"                    
+                                type="date"                   
                         >                    
                     </p>
                        
                 </fieldset> <!-- ends contact -->
+                
+                <fieldset>
+        <h2>Chose Mountain</h2>
+            <?php
+            
+             foreach ($mountains as $mountain) {
+                print '<input type = "radio"';
+                print 'value="' . $mountain["pmkTrailsId"] . '" name="Trails" >' . $mountain["fldTrailName"];
+                print '<br>';
+              }
+      ?>
+            </label>
+                      
+
+        </fieldset>
 
             <fieldset class="buttons">
                 <legend></legend>
-                <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
+                <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Add" >
             </fieldset> <!-- ends buttons -->
 </form>     
 <?php
