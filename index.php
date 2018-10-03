@@ -9,7 +9,7 @@ include "top.php";
 
 // Begin output
 print '<article>';
-print '<h2>Hikers</h2>';
+print '<h2>A Hikers Home</h2>';
 $records = '';
 
 $query = 'SELECT fldFirstName, fldLastName FROM tblHikers';

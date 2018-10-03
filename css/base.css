@@ -26,6 +26,10 @@ footer{
     clear: both;
 }
 
+h1{
+    text-align: Center;
+    font-size: 50px;
+}
 h1, h2, h3, h4, h5, h6{
     padding: 1.5em 0 .8em 0;
 }
