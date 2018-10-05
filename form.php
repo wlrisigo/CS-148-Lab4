@@ -88,9 +88,12 @@ if (isset($_POST["btnSubmit"])) {
     print PHP_EOL . '<!-- SECTION: 2b Sanitize (clean) data  -->' . PHP_EOL;
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
-    
+  if(isset($_POST["txtDate"]))
     $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8"); 
- 
+    
+    if(isset($_POST["Trails"]))
+        $trailClicked = htmlentities($_POST["Trails"], ENT_QUOTES, "UTF-8");
+    
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     print PHP_EOL . '<!-- SECTION: 2c Validation -->' . PHP_EOL;
@@ -108,6 +111,10 @@ if (isset($_POST["btnSubmit"])) {
     elseif (!validateDate($date)) {
         $errorMsg[] = "Invalid Date Entry";
         $dateError = true;
+    }
+    if($_answer = ""){
+         $errorMsg[] = "Please Select a Trail";
+         $trailError = true;
     }
     
   
@@ -284,7 +291,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                         <label class="required" for="txtDate">Date</label>  
                         <input 
                                <?php //What type of data type is date? ?>
-                                <?php if ($dateERROR) print 'class="mistake"'; ?>
+                                <?php if ($dateERROR) 
+                                    print 'class="mistake"'; ?>
                                 id="txtDate"
                                 name="txtDate"                              
                                 tabindex="100"
@@ -315,6 +323,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
             <?php
             
              foreach ($mountains as $mountain) {
+                 if ($trailERROR)
+                     print 'class="mistake"';
                 print '<input type = "radio"';
                 print 'value="' . $mountain["pmkTrailsId"] . '" name="Trails" >' . $mountain["fldTrailName"];
                 print '<br>';
