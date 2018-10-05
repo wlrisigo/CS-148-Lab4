@@ -108,8 +108,9 @@ if (isset($_POST["btnSubmit"])) {
     elseif (!validateDate($date)) {
         $errorMsg[] = "Invalid Date Entry";
         $dateError = true;
-        
     }
+    
+  
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     print PHP_EOL . '<!-- SECTION: 2d Process Form - Passed Validation -->' . PHP_EOL;
@@ -291,20 +292,21 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                 value ="<?php print $date; ?>"
                         >                    
                     </p>
-                      <script>   var today = new Date();
-var dd = today.getDate();
-var mm = today.getMonth()+1; //January is 0!
-var yyyy = today.getFullYear();
- if(dd<10){
-        dd='0'+dd
-    } 
-    if(mm<10){
-        mm='0'+mm
-    } 
+                 <script>   
+                          var today = new Date();
+                    var dd = today.getDate();
+                    var mm = today.getMonth()+1; //January is 0!
+                    var yyyy = today.getFullYear();
+                     if(dd<10){
+                            dd='0'+dd
+                        } 
+                        if(mm<10){
+                            mm='0'+mm
+                        } 
 
-today = yyyy+'-'+mm+'-'+dd;
-document.getElementById("txtDate").setAttribute("max", today);
-</script>
+                    today = yyyy+'-'+mm+'-'+dd;
+                    document.getElementById("txtDate").setAttribute("max", today);
+                </script>
                        
                 </fieldset> <!-- ends contact -->
                 
