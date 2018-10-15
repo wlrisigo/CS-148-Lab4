@@ -1,6 +1,8 @@
 <?php
 print PHP_EOL . '<!--  BEGIN include security -->' . PHP_EOL;
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ $token = '50270bd3482b5344e4fbbe4e7b4e1ce9d6075224';
 // performs a simple security check to see if our page has submitted the form to itself
 function securityCheck($myFormURL = "") {
     $debugThis = false;  // you have to specifically want to test this

@@ -88,8 +88,11 @@ if (isset($_POST["btnSubmit"])) {
     print PHP_EOL . '<!-- SECTION: 2b Sanitize (clean) data  -->' . PHP_EOL;
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
-  if(isset($_POST["txtDate"]))
-    $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8"); 
+   if(isset($_POST["selectedHiker"]))
+        $xHiker = htmlentities($_POST["selectedHiker"], ENT_QUOTES, "UTF-8");
+    
+   if(isset($_POST["txtDate"]))
+        $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8"); 
     
     if(isset($_POST["Trails"]))
         $trailClicked = htmlentities($_POST["Trails"], ENT_QUOTES, "UTF-8");
@@ -133,9 +136,9 @@ if (isset($_POST["btnSubmit"])) {
         $dataEntered = false;
         $dataRecord = array();
       
-        $dataRecord[] = $_POST["selectedHiker"];
-        $dataRecord[] = $_POST["Trails"];
-        $dataRecord[] = $_POST["txtDate"];
+         $dataRecord[] = $xHiker;
+        $dataRecord[] = $trailClicked;
+        $dataRecord[] = $date;
         
         
         try{
@@ -214,8 +217,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
     
 
     } else {       
-     print '<h2>Register Today</h2>';
-     print '<p class="form-heading">Your information will greatly help us with our research.</p>';
+     print '<h2>Add Your Hike</h2>';
+     print '<p class="form-heading">Compete with local hikers, and take a hike!</p>';
      
         //####################################
         //
@@ -277,7 +280,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                 print '<option ';
                 if ($currentHiker == $hiker["pmkHikersId"])
                     print " selected='selected' ";
-                print 'value="' . $hiker["pmkHikersId"] . '">' . $hiker["fldFirstName"] . $hiker["fldLastName"];
+                print 'value="' . $hiker["pmkHikersId"] . '">' . $hiker["fldFirstName"] . " " . $hiker["fldLastName"];
                 print '</option>';
               }
       ?>
@@ -321,18 +324,34 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                 <fieldset>
         <h2>Chose Mountain</h2>
             <?php
-            
+            $x = 0;
              foreach ($mountains as $mountain) {
                  if ($trailERROR)
                      print 'class="mistake"';
+                  
                 print '<input type = "radio"';
                 print 'value="' . $mountain["pmkTrailsId"] . '" name="Trails" >' . $mountain["fldTrailName"];
+             
+                
                 print '<br>';
               }
       ?>
-            </label>
+                <script> 
+                var allRadios = document.getElementsByName('Trails');
+                var booRadio;
+                var x = 0;
+                for(x = 0; x < allRadios.length; x++){
+                  allRadios[x].onclick = function() {
+                    if(booRadio == this){
+                      this.checked = false;
+                      booRadio = null;
+                    } else {
+                      booRadio = this;
+                    }
+                  };
+                }   
                       
-
+                      </script>
         </fieldset>
 
             <fieldset class="buttons">
